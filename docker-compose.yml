@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    container_name: cyberpunk_web
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.local
+      - ./backend/.env
