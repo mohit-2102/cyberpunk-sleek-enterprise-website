@@ -1,11 +1,24 @@
-version: "3.8"
+version: "3.9"
 
 services:
-  web:
-    build: .
-    container_name: cyberpunk_web
+  frontend:
+    build:
+      context: .                # CyberPunk folder
+      dockerfile: Dockerfile    # your frontend Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE: http://backend:5000/api
+    container_name: cyberpunk_frontend
     ports:
       - "3000:3000"
     env_file:
-      - .env.local
-      - ./backend/.env
+      - .env.docker   # still load runtime envs (for NextAuth, Google keys, etc.)
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    container_name: cyberpunk_backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env.docker
